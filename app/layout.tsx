@@ -11,6 +11,7 @@ const RootLayout = ({ children }) => {
   return (
     <html>
         <body>
+            {/* @ts-ignore */}
             <Provider>
                 <div className="main">
                     <div className='gradient' />

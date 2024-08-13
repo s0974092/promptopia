@@ -3,14 +3,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
+import { signIn, signOut, useSession, getProviders, LiteralUnion, ClientSafeProvider } from 'next-auth/react'
+import { BuiltInProviderType, Provider } from 'next-auth/providers/index'
 
 const Nav = () => {
   const { data: session } = useSession();
   // const isUserLoggedIn = true;
 
-  const [ providers, setProviders ] = useState(null);
-  const [toggleDropdown, setToggleDropdown] = useState(false);
+  const [ providers, setProviders ] = useState<Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>>(null);
+  const [ toggleDropdown, setToggleDropdown ] = useState(false);
 
   useEffect(() => {
     const setUpProviders = async (res?: unknown) => {
@@ -45,7 +46,7 @@ const Nav = () => {
                 Create Post
               </Link>
     
-              <button type='button' onClick={signOut} className='outline_btn'>
+              <button type='button' onClick={() => signOut()} className='outline_btn'>
                 Sign Out
               </button>
 
