@@ -14,4 +14,6 @@ A fullstack URL promptopia app built with Next.js v14, using server and client c
 
 
 ## TODO List & Roadmap
-- [ ] search keyword or hash tag
+- [ ] Implement Search
+- [ ] Implement Click on tag
+- [ ] Implement View other profiles
