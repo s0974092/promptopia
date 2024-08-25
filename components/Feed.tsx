@@ -23,11 +23,41 @@ const PromptCardList = ({ data, handleTagClick }) => {
 
 const Feed = () => {
   const [searchText, setSearchText] = useState('');
-  const [posts, setPosts] = useState([]);
+  const [searchTimeout, setSearchTimeout] = useState(null);
+  const [searchedResults, setSearchedResults] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
+
+  const filterPrompts = (searchText) => {
+    const regex = new RegExp(searchText, "i");
+
+    return allPosts.filter((item) => 
+      regex.test(item.creator.username) ||
+      regex.test(item.tag) ||
+      regex.test(item.prompt)
+    );
+  };
 
   const handleSearchChange = (e) => {
     console.log(e);
+    setSearchTimeout(clearTimeout);
     setSearchText(e.target.value);
+
+    // debounce method
+    setSearchTimeout(
+      setTimeout(() => {
+        const searchResult = filterPrompts(e.target.value);
+        console.log('searchResult', searchResult);
+        
+        setSearchedResults(searchResult);
+      }, 500)
+    );
+  };
+
+  const handleTagClick = (tagName) => {
+    setSearchText(tagName);
+
+    const searchResult = filterPrompts(tagName);
+    setSearchedResults(searchResult);
   };
 
   useEffect(() => {
@@ -35,12 +65,11 @@ const Feed = () => {
       const response = await fetch('/api/prompt');
       const data = await response.json();
 
-      setPosts(data);
+      setAllPosts(data);
     }
 
     fetchPosts();
   }, [])
-  
 
   return (
     <section className='feed'>
@@ -54,11 +83,22 @@ const Feed = () => {
           className='search_input peer'
         />
       </form>
+      {/* All Prompts */}
+      { searchText ?
+        (
+          <PromptCardList
+            data={searchedResults}
+            handleTagClick={handleTagClick}
+          />
+        ) :
+        (
+          <PromptCardList
+            data={allPosts}
+            handleTagClick={handleTagClick}
+          />
+        )
+      }
 
-      <PromptCardList
-        data={posts}
-        handleTagClick={() => {}}
-      />
     </section>
   )
 }

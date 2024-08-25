@@ -50,7 +50,7 @@ const Nav = () => {
                 Sign Out
               </button>
 
-              <Link href='/my-profile'>
+              <Link href='/profile'>
                 <Image 
                   src={ session?.user?.image as string }
                   alt='profile'
